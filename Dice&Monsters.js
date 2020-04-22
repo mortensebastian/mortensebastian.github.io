@@ -8,40 +8,42 @@ function Monster(id, race, weapon, rangeWeapon) {
     this.weapon = weapon;
     this.rangeWeapon = rangeWeapon
 
+    var rollArray = abilityModifier()
+
 
 
     if (this.race === 'Goblin') {
         this.hp = d(6, 2);
-        this.str = abilityModifier()[0] -1;
-        this.dex = abilityModifier()[1] +2;
-        this.con = abilityModifier()[2];
-        this.int = abilityModifier()[3];
-        this.wis = abilityModifier()[4] -1;
-        this.cha = abilityModifier()[5] -1;
+        this.str = rollArray[0] -1;
+        this.dex = rollArray[1] +2;
+        this.con = rollArray[2];
+        this.int = rollArray[3];
+        this.wis = rollArray[4] -1;
+        this.cha = rollArray[5] -1;
         this.ac = 13 + this.dex;
         this.speed = 30
         this.proficiencyBonus = 2
         
       } else if (this.race === 'Drow') {
         this.hp = d(8, 3);
-        this.str = abilityModifier()[0];
-        this.dex = abilityModifier()[1] +2;
-        this.con = abilityModifier()[2];
-        this.int = abilityModifier()[3];
-        this.wis = abilityModifier()[4];
-        this.cha = abilityModifier()[5] +1;
+        this.str = rollArray[0];
+        this.dex = rollArray[1] + 2;
+        this.con = rollArray[2];
+        this.int = rollArray[3];
+        this.wis = rollArray[4];
+        this.cha = rollArray[5] + 1;
         this.ac = 13 + (this.dex >= 2 ? 2 : this.dex);
         this.speed = 30;
         this.proficiencyBonus = 2
 
       } else if (this.race === 'Bugbear'){
         this.hp = d(8, 5) + 5;
-        this.str = abilityModifier()[0] +2;
-        this.dex = abilityModifier()[1] +2;
-        this.con = abilityModifier()[2] +1;
-        this.int = abilityModifier()[3] -1;
-        this.wis = abilityModifier()[4];
-        this.cha = abilityModifier()[5] -1;
+        this.str = rollArray[0] + 2;
+        this.dex = rollArray[1] + 2;
+        this.con = rollArray[2] + 1;
+        this.int = rollArray[3] - 1;
+        this.wis = rollArray[4];
+        this.cha = rollArray[5] - 1;
         this.ac = 14 + (this.dex >= 2 ? 2 : this.dex);
         this.speed = 30;
         this.proficiencyBonus = 2
@@ -138,8 +140,7 @@ var data = {
 }
 
 //-----------------------------------------------------------------
-// Knapp som lager monstere med monster constructor, og displayer de med monstorGenerator
-
+// Event listeners med funksjon
 document.querySelector('.btn-create').addEventListener('click', function() {
     var race = document.querySelector('#race').value;
     console.log(race);
@@ -155,19 +156,77 @@ if (data.allMonsters.length > 0) {
     var monster = new Monster(
         ID, race, scimitar, shortbow
     );
+
+    data.allMonsters.push(monster);
+
     monsterGenerator(monster);
+    console.log(monster)
+    console.log(data);
+});
+
+//Attack knapper
+/*
+document.querySelector('.monsters').addEventListener('click', function(event){    
+    var ID = event.target.parentNode.parentNode.parentNode.parentNode.id; 
+    console.log(event.target);
+    data.allMonsters[ID].meleeeAttack();
+});
+*/
+
+
+
+document.querySelector('.monsters').addEventListener('click', function(event) {     
+    var monsterID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    var set = event.target
+    console.log(set);
+    if (set === 'button.btn-melee') {
+        console.log(data.allMonsters[monsterID].meleeeAttack());
+    }else if (set == '<button class="btn-ranged">Ranged Attack</button>') {
+        data.allMonsters[monsterID].rangeAttack();
+    };
 
 });
 
 
 //Sletter monstere
 document.querySelector('.monsters').addEventListener('click', function(event){
-    var monsterID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    var ID, set;
+    
+    set = event.target.parentNode.parentNode.parentNode.parentNode.id;
+    ID = parseInt(set);
+
+    //Delete item in data structure
+        deleteItem(ID);
+
+    //Delete item form UI
+        deleteUIItem(set);
+    //
+
+
 });
 
 //-----------------------------------------------------------------
 //Funksjoner:
 
+deleteItem = function(id) {
+    var index, ids;
+
+    ids = data.allMonsters.map(function(currentValue) {
+        return currentValue.id
+    });
+
+    index = ids.indexOf(id)
+    console.log(index)
+
+    if (index !== -1) {
+        data.allMonsters.splice(index, 1);
+    }
+};
+
+deleteUIItem = function(selectorID){
+    var el = document.getElementById(selectorID);
+    el.parentNode.removeChild(el);
+}
 //Ternings funksjonen
 function d(dNr, nDices) {
     if (!nDices) {
@@ -183,32 +242,8 @@ function d(dNr, nDices) {
     return dice;
   }
 
+
 //Rulle terninger for å determinere ability modifier
-
-
-// Lager monstere i html
-function monsterGenerator(monster) {
-    var html, newHtml;
-
-    html = '<div class="item clearfix" id="%monster-0%"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>                   <div class="item__attack"><button class="btn-melee"></i>Melee Attack</button><button class="btn-ranged"></i>Ranged Attack</button></div></div></div>'
-
-    //Replace paceholder text with some actual data
-    newHtml = html.replace('%monster%', monster.race);
-    newHtml = newHtml.replace('%10%', monster.hp);
-    newHtml = newHtml.replace('%12%', monster.ac);
-    newHtml = newHtml.replace('%2%', monster.hit);
-    newHtml = newHtml.replace('%3%', monster.weapon.dmgDie);
-    newHtml = newHtml.replace('%4%', monster.rangedHit);
-    newHtml = newHtml.replace('%5%', monster.rangeWeapon.dmgDie);
-
-    
-
-    
-    //Insert HTMP to the DOM 
-    document.querySelector('.monster__list').insertAdjacentHTML('beforeend', newHtml) 
-    return newHtml;
-}  
-
 var abilityModifier = function() {
     var roll = function() {
         var rolls, rollSum, rollsArray;
@@ -229,11 +264,33 @@ var abilityModifier = function() {
     return Math.floor((rollSum - 10)/ 2);
     };
     
-    return[roll(), roll(), roll(), roll(), roll(), roll()];
+    return [roll(), roll(), roll(), roll(), roll(), roll()];
 
 };
 
+// Lager monstere i html
+function monsterGenerator(monster) {
+    var html, newHtml;
 
+    html = '<div class="item clearfix" id="%monster-0%"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>                   <div class="item__attack"><button class="btn-melee"></i>Melee Attack</button><button class="btn-ranged"></i>Ranged Attack</button><div class="hit" id="hit"></div><div class="dmg" id="dmg"></div></div></div></div>'
+
+    //Replace paceholder text with some actual data
+    newHtml = html.replace('%monster%', monster.race);
+    newHtml = newHtml.replace('%10%', monster.hp);
+    newHtml = newHtml.replace('%12%', monster.ac);
+    newHtml = newHtml.replace('%2%', monster.hit);
+    newHtml = newHtml.replace('%3%', monster.weapon.dmgDie);
+    newHtml = newHtml.replace('%4%', monster.rangedHit);
+    newHtml = newHtml.replace('%5%', monster.rangeWeapon.dmgDie);
+    newHtml = newHtml.replace('%monster-0%', monster.id);
+
+    
+
+    
+    //Insert HTMP to the DOM 
+    document.querySelector('.monster__list').insertAdjacentHTML('beforeend', newHtml) 
+    return newHtml;
+}  
 
 
 /*
