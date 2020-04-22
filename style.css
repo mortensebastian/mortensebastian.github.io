@@ -124,3 +124,28 @@ h2 {
 .item:hover .item__percentage { transform: translateX(-20px); }
 
 
+.btn-melee { 
+    background-color: #bebaba; 
+    border: none;
+    color: rgb(27, 27, 27);
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn-ranged { 
+    background-color: #bebaba; 
+    border: none;
+    color: rgb(27, 27, 27);
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+

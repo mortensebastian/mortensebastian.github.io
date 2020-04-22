@@ -1,8 +1,9 @@
 
 
 //Monster constructor
-function Monster(race, weapon, rangeWeapon) {
+function Monster(id, race, weapon, rangeWeapon) {
 
+    this.id = id;
     this.race = race;
     this.weapon = weapon;
     this.rangeWeapon = rangeWeapon
@@ -132,34 +133,37 @@ var javelin = new Weapon (
 
 
 
-
+var data = {
+    allMonsters: []
+}
 
 //-----------------------------------------------------------------
-// Knapper som lager monstere med monster constructor, og displayer de med monstorGenerator
+// Knapp som lager monstere med monster constructor, og displayer de med monstorGenerator
 
-document.querySelector('.btn-goblin').addEventListener('click', function() {
-    var goblin = new Monster(
-        'Goblin', scimitar, shortbow
+document.querySelector('.btn-create').addEventListener('click', function() {
+    var race = document.querySelector('#race').value;
+    console.log(race);
+
+//Create new ID
+if (data.allMonsters.length > 0) {
+    ID = data.allMonsters[data.allMonsters.length -1].id + 1
+    } else {
+        ID = 0;
+    }
+
+    
+    var monster = new Monster(
+        ID, race, scimitar, shortbow
     );
-    monsterGenerator(goblin);
+    monsterGenerator(monster);
+
 });
 
-document.querySelector('.btn-drow').addEventListener('click', function() {
-    var drow = new Monster(
-        'Drow', shortsword, crossbow
-    );
-    monsterGenerator(drow);
+
+//Sletter monstere
+document.querySelector('.monsters').addEventListener('click', function(event){
+    var monsterID = event.target.parentNode.parentNode.parentNode.parentNode.id;
 });
-
-document.querySelector('.btn-bugbear').addEventListener('click', function() {
-    var bugbear = new Monster(
-        'Bugbear', morningstar, javelin
-    );
-    monsterGenerator(bugbear);
-});
-
-
-
 
 //-----------------------------------------------------------------
 //Funksjoner:
@@ -180,19 +184,13 @@ function d(dNr, nDices) {
   }
 
 //Rulle terninger for å determinere ability modifier
-var abilityModifier = function() {
-    var roll = function() {
-        return Math.floor((d(6, 3) - 10)/ 2);
-    };
 
-    return [roll(), roll(), roll(), roll(), roll(), roll()];
-};
 
 // Lager monstere i html
 function monsterGenerator(monster) {
     var html, newHtml;
 
-    html = '<div class="item clearfix" id="monster-0"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+    html = '<div class="item clearfix" id="%monster-0%"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>                   <div class="item__attack"><button class="btn-melee"></i>Melee Attack</button><button class="btn-ranged"></i>Ranged Attack</button></div></div></div>'
 
     //Replace paceholder text with some actual data
     newHtml = html.replace('%monster%', monster.race);
@@ -204,9 +202,39 @@ function monsterGenerator(monster) {
     newHtml = newHtml.replace('%5%', monster.rangeWeapon.dmgDie);
 
     
+
+    
     //Insert HTMP to the DOM 
     document.querySelector('.monster__list').insertAdjacentHTML('beforeend', newHtml) 
+    return newHtml;
 }  
+
+var abilityModifier = function() {
+    var roll = function() {
+        var rolls, rollSum, rollsArray;
+
+        rolls = [d(6), d(6), d(6), d(6)];
+
+        if (rolls[0] < rolls[1] && rolls[2] && rolls[3]){
+            rolls.splice(0, 1);
+        } else if (rolls[1] < rolls[0] && rolls[2] && rolls[3]) {
+            rolls.splice(1, 1);
+        } else if (rolls[2] < rolls[0] && rolls[1] && rolls[3]) {
+            rolls.splice(2, 1);
+        } else if (rolls[3] < rolls[0] && rolls[1] && rolls[2]) {
+            rolls.splice(3, 1);
+        };
+
+    rollSum = rolls.reduce(function(acc, val) { return acc + val; }, 0)
+    return Math.floor((rollSum - 10)/ 2);
+    };
+    
+    return[roll(), roll(), roll(), roll(), roll(), roll()];
+
+};
+
+
+
 
 /*
 Forsøk på å lage advantage
@@ -230,5 +258,76 @@ document.querySelector('.btn-bugbear').addEventListener('click', function() {
 
 document.querySelector('.btn-bugbearRanged').addEventListener('click', function() {
     bugbear.rangeAttack();
+});
+
+gamle abilitymodifyer rull
+
+var abilityModifier = function() {
+    var roll = function() {
+        return Math.floor((d(6, 3) - 10)/ 2);
+    };
+
+    return [roll(), roll(), roll(), roll(), roll(), roll()];
+};
+
+//GAmle monster creatorere
+document.querySelector('.btn-goblin').addEventListener('click', function() {
+    var newMonster, ID;
+            
+    //Create new ID
+    if (data.allMonsters.length > 0) {
+    ID = data.allMonsters[data.allMonsters.length -1].id + 1
+    } else {
+        ID = 0;
+    }
+    
+    var newMonster = new Monster(
+        ID, 'Goblin', scimitar, shortbow
+    );
+    console.log(newMonster);
+
+    data.allMonsters.push(newMonster);
+
+    monsterGenerator(newMonster);
+});
+
+document.querySelector('.btn-drow').addEventListener('click', function() {
+    var newMonster, ID;
+            
+    //Create new ID
+    if (data.allMonsters.length > 0) {
+    ID = data.allMonsters[data.allMonsters.length -1].id + 1
+    } else {
+        ID = 0;
+    }
+    
+    var newMonster = new Monster(
+        ID, 'Drow', scimitar, shortbow
+    );
+    console.log(newMonster);
+
+    data.allMonsters.push(newMonster);
+
+    monsterGenerator(newMonster);
+});
+
+document.querySelector('.btn-bugbear').addEventListener('click', function() {
+    var newMonster, ID;
+            
+    //Create new ID
+    if (data.allMonsters.length > 0) {
+    ID = data.allMonsters[data.allMonsters.length -1].id + 1
+    } else {
+        ID = 0;
+    }
+    
+    var newMonster = new Monster(
+        ID, 'Bugbear', scimitar, shortbow
+    );
+    console.log(newMonster);
+
+    data.allMonsters.push(newMonster);
+
+    monsterGenerator(newMonster);
 });
 */

@@ -12,9 +12,19 @@
     <body>
         <h1>Dice and Monsters</h1>
 
-        <button class="btn-goblin"><i class=""></i>Create Goblin</button>
-        <button class="btn-drow"><i class=""></i>Create Drow</button>
-        <button class="btn-bugbear"><i class=""></i>Create Bugbear</button>
+
+
+        <label for="">Choose a race:</label>
+        <select id="race">
+          <option value="Goblin">Goblin</option>
+          <option value="Drow">Drow</option>
+          <option value="Bugbear">Bugbear</option>
+
+        </select>
+
+        
+        <button class="btn-create"><i class=""></i>Create Monster</button>
+
 
         <div class="monsters">
             <h2 class="monsters__title">Monsters</h2>
@@ -33,6 +43,10 @@
                         <div class="item__rangeDMG">Range attack dmg dice: 5</div>
                         <div class="item__delete">
                             <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
+                        <div class="item__attack">
+                        <button class="btn-melee"><i class="ion-ios-plus-outline"></i>Melee Attack</button>
+                        <button class="btn-ranged"><i class="ion-ios-loop"></i>Ranged Attack</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -46,6 +60,11 @@
                         <button class="btn-bugbearRanged"><i class="ion-ios-loop"></i>Bugbear Ranged Attack</button>
                         <div class="hit" id="hit">72</div>
                         <div class="dmg" id="dmg">72</div>
+
+                gamle creat buttons
+        <button class="btn-goblin"><i class=""></i>Create Goblin</button>
+        <button class="btn-drow"><i class=""></i>Create Drow</button>
+        <button class="btn-bugbear"><i class=""></i>Create Bugbear</button>
             -->
 
     </body>
