@@ -272,7 +272,7 @@ var abilityModifier = function() {
 function monsterGenerator(monster) {
     var html, newHtml;
 
-    html = '<div class="item clearfix" id="%monster-0%"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>                   <div class="item__attack"><button class="btn-melee"></i>Melee Attack</button><button class="btn-ranged"></i>Ranged Attack</button><div class="hit" id="hit"></div><div class="dmg" id="dmg"></div></div></div></div>'
+    html = '<div class="item clearfix" id="%monster-0%"><div class="monster__description">%monster%</div><div class="right clearfix"><div class="monster__hp">HP: %10%</div><div class="item__ac">AC: %12%</div><div class="item__melee">Melee attack bonus to hit: %2%</div><div class="item__meleeDMG">Melee attack dmg dice: %3%</div><div class="item__range">Range attack to hit: %4%</div><div class="item__rangeDMG">Range attack dmg dice: %5%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div><div class="item__attack"><button class="btn-melee"></i>Melee Attack</button><button class="btn-ranged"></i>Ranged Attack</button><div class="hit" id="hit"></div><div class="dmg" id="dmg"></div></div></div></div>'
 
     //Replace paceholder text with some actual data
     newHtml = html.replace('%monster%', monster.race);
